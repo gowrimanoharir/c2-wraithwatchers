@@ -25,7 +25,7 @@ export async function parseSightingsCSV(): Promise<Sighting[]> {
         );
         resolve(sightings);
       },
-      error: (error) => {
+      error: (error: Error) => {
         reject(error);
       }
     });
