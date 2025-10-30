@@ -1,26 +1,58 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #F8F8F8;
+  --accent-orange: #FF9F40;
+  --accent-gray: #6E6E6E;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-gray: var(--accent-gray);
+  --font-sans: var(--font-space-grotesk);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Leaflet map styling for black and white */
+.leaflet-container {
+  background: #000000;
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.leaflet-tile {
+  filter: grayscale(100%) contrast(1.2) brightness(0.8);
+}
+
+/* Custom marker styling */
+.ghost-marker {
+  background: transparent;
+  border: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6E6E6E;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF9F40;
 }
