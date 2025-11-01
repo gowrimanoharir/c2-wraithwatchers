@@ -37,20 +37,21 @@ export function checkRateLimit(ip: string): RateLimitCheck {
   }
 
   // Within rate limit window
-  if (record.count < MAX_REQUESTS) {
-    record.count++;
-    
+  // Check if we've already hit the limit
+  if (record.count >= MAX_REQUESTS) {
     return {
-      allowed: true,
-      remaining: MAX_REQUESTS - record.count,
+      allowed: false,
+      remaining: 0,
       resetAt: new Date(record.resetAt)
     };
   }
-
-  // Rate limit exceeded
+  
+  // Increment and allow
+  record.count++;
+  
   return {
-    allowed: false,
-    remaining: 0,
+    allowed: true,
+    remaining: MAX_REQUESTS - record.count,
     resetAt: new Date(record.resetAt)
   };
 }
