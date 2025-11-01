@@ -82,10 +82,13 @@ export default function PostSighting() {
       } else {
         // Show rate limit or error message
         let errorMsg = result.error || 'Failed to submit sighting';
+        
+        // Add retry time if rate limited
         if (result.resetAt) {
           const resetTime = new Date(result.resetAt).toLocaleTimeString();
-          errorMsg = `${errorMsg} Try again after ${resetTime}`;
+          errorMsg = `Rate limit exceeded. Too many submissions. Try again after ${resetTime}.`;
         }
+        
         setError(errorMsg);
         setIsSubmitting(false);
       }

@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Rate limit exceeded',
-          message: `Too many submissions. Please try again after ${rateLimit.resetAt.toLocaleTimeString()}`,
+          message: 'Too many submissions. Please try again later.',
           resetAt: rateLimit.resetAt.toISOString()
         },
         { 
