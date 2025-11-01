@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Sighting, SightingStats } from './types/sighting';
-import { parseSightingsCSV, calculateStats, getRelativeTime } from './utils/csvParser';
+import { fetchSightings, calculateStats, getRelativeTime } from '../lib/database';
 import SightingsTable from './components/SightingsTable';
 
 // Dynamically import map component (client-side only)
@@ -25,7 +25,7 @@ export default function Home() {
   useEffect(() => {
     async function loadData() {
       try {
-        const data = await parseSightingsCSV();
+        const data = await fetchSightings();
         setSightings(data);
         setStats(calculateStats(data));
       } catch (error) {

@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { Icon, LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Sighting } from '../types/sighting';
-import { formatDate } from '../utils/csvParser';
+import { formatDate } from '../../lib/database';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 

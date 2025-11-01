@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Sighting } from '../types/sighting';
-import { formatDate } from '../utils/csvParser';
+import { formatDate } from '../../lib/database';
 import Image from 'next/image';
 
 interface SightingsTableProps {

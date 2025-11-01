@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { addSighting } from '../../lib/database';
 
 // Dynamically import map component
 const MapPicker = dynamic(() => import('../components/MapPicker'), {
@@ -54,14 +55,45 @@ export default function PostSighting() {
     'Midnight',
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
     
-    // In a real app, this would send to a database
-    console.log('Sighting submitted:', formData);
-    
-    // Navigate to thank you page
-    router.push('/thank-you');
+    try {
+      // Save to Supabase database
+      const result = await addSighting({
+        dateOfSighting: formData.date,
+        timeOfDay: formData.time,
+        tag: formData.type,
+        notes: formData.notes,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+        city: 'Unknown', // Could add reverse geocoding later
+        state: 'Unknown',
+      });
+
+      if (result.success) {
+        // Navigate to thank you page
+        router.push('/thank-you');
+      } else {
+        // Show rate limit or error message
+        let errorMsg = result.error || 'Failed to submit sighting';
+        if (result.resetAt) {
+          const resetTime = new Date(result.resetAt).toLocaleTimeString();
+          errorMsg = `${errorMsg} Try again after ${resetTime}`;
+        }
+        setError(errorMsg);
+        setIsSubmitting(false);
+      }
+    } catch (err) {
+      console.error('Error submitting sighting:', err);
+      setError('An unexpected error occurred. Please try again.');
+      setIsSubmitting(false);
+    }
   };
 
   const handleLocationSelect = (lat: number, lng: number) => {
@@ -172,12 +204,20 @@ export default function PostSighting() {
           </p>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="p-4 bg-red-500/20 border border-red-500 rounded-lg text-red-300">
+            {error}
+          </div>
+        )}
+
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-4 bg-accent-orange text-black rounded-lg font-bold text-lg hover:bg-accent-orange/80 transition-colors"
+          disabled={isSubmitting}
+          className="w-full py-4 bg-accent-orange text-black rounded-lg font-bold text-lg hover:bg-accent-orange/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Post Your Sighting
+          {isSubmitting ? 'Posting Sighting...' : 'Post Your Sighting'}
         </button>
       </form>
     </div>
